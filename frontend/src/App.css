@@ -1,38 +1,46 @@
-.App {
+.doc-section {
+  margin: 20px;
+  padding-top: 50px;
+  text-align: center;
+  border: 1px solid lightgray;
+  height: 100vh;
+  background: white;
+}
+
+.success {
+  color: green;
+}
+
+.error {
+  color: red;
+}
+
+.file-uploader {
+  padding: 50px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.navbar-item img {
+  max-height: 2.25rem !important;
+}
+
+.centered {
+  text-align: center;
+  padding-top: 100px;
+}
+
+.full-content {
+  height: 100vh;
+  background: white;
   text-align: center;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.action-button {
+  margin-top: 200px;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.App {
+  background: lightgray;
+  /* TODO: add url bg */
 }
