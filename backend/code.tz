@@ -1,0 +1,188 @@
+parameter (or (pair %register_doc (string %createdBy) (pair (string %hash) (string %name))) (string %validate_doc));
+storage   (pair (map %hashToDoc string (pair (string %createdBy) (pair (string %name) (timestamp %timestamp)))) (pair (pair %lastDoc (string %createdBy) (pair (string %name) (timestamp %timestamp))) (address %owner)));
+code
+  {
+    DUP;        # pair @parameter @storage : pair @parameter @storage
+    CDR;        # @storage : pair @parameter @storage
+    SWAP;       # pair @parameter @storage : @storage
+    CAR;        # @parameter : @storage
+    IF_LEFT
+      {
+        SWAP;       # @storage : @parameter%register_doc
+        # == register_doc ==
+        # if ~ (self.data.hashToDoc.contains(params.hash)): # @storage : @parameter%register_doc
+        DUP;        # @storage : @storage : @parameter%register_doc
+        DUG 2;      # @storage : @parameter%register_doc : @storage
+        CAR;        # map string (pair (string %createdBy) (pair (string %name) (timestamp %timestamp))) : @parameter%register_doc : @storage
+        SWAP;       # @parameter%register_doc : map string (pair (string %createdBy) (pair (string %name) (timestamp %timestamp))) : @storage
+        DUP;        # @parameter%register_doc : @parameter%register_doc : map string (pair (string %createdBy) (pair (string %name) (timestamp %timestamp))) : @storage
+        DUG 2;      # @parameter%register_doc : map string (pair (string %createdBy) (pair (string %name) (timestamp %timestamp))) : @parameter%register_doc : @storage
+        CDAR;       # string : map string (pair (string %createdBy) (pair (string %name) (timestamp %timestamp))) : @parameter%register_doc : @storage
+        MEM;        # bool : @parameter%register_doc : @storage
+        IF
+          {}
+          {
+            SWAP;       # @storage : @parameter%register_doc
+            # self.data.hashToDoc[params.hash] = sp.record(createdBy = '', name = '', timestamp = sp.timestamp(0)) # @storage : @parameter%register_doc
+            DUP;        # @storage : @storage : @parameter%register_doc
+            CDR;        # pair (pair %lastDoc (string %createdBy) (pair (string %name) (timestamp %timestamp))) (address %owner) : @storage : @parameter%register_doc
+            SWAP;       # @storage : pair (pair %lastDoc (string %createdBy) (pair (string %name) (timestamp %timestamp))) (address %owner) : @parameter%register_doc
+            CAR;        # map string (pair (string %createdBy) (pair (string %name) (timestamp %timestamp))) : pair (pair %lastDoc (string %createdBy) (pair (string %name) (timestamp %timestamp))) (address %owner) : @parameter%register_doc
+            DIG 2;      # @parameter%register_doc : map string (pair (string %createdBy) (pair (string %name) (timestamp %timestamp))) : pair (pair %lastDoc (string %createdBy) (pair (string %name) (timestamp %timestamp))) (address %owner)
+            DUP;        # @parameter%register_doc : @parameter%register_doc : map string (pair (string %createdBy) (pair (string %name) (timestamp %timestamp))) : pair (pair %lastDoc (string %createdBy) (pair (string %name) (timestamp %timestamp))) (address %owner)
+            DUG 3;      # @parameter%register_doc : map string (pair (string %createdBy) (pair (string %name) (timestamp %timestamp))) : pair (pair %lastDoc (string %createdBy) (pair (string %name) (timestamp %timestamp))) (address %owner) : @parameter%register_doc
+            CDAR;       # string : map string (pair (string %createdBy) (pair (string %name) (timestamp %timestamp))) : pair (pair %lastDoc (string %createdBy) (pair (string %name) (timestamp %timestamp))) (address %owner) : @parameter%register_doc
+            PUSH (option (pair (string %createdBy) (pair (string %name) (timestamp %timestamp)))) (Some (Pair "" (Pair "" "0"))); # option (pair (string %createdBy) (pair (string %name) (timestamp %timestamp))) : string : map string (pair (string %createdBy) (pair (string %name) (timestamp %timestamp))) : pair (pair %lastDoc (string %createdBy) (pair (string %name) (timestamp %timestamp))) (address %owner) : @parameter%register_doc
+            SWAP;       # string : option (pair (string %createdBy) (pair (string %name) (timestamp %timestamp))) : map string (pair (string %createdBy) (pair (string %name) (timestamp %timestamp))) : pair (pair %lastDoc (string %createdBy) (pair (string %name) (timestamp %timestamp))) (address %owner) : @parameter%register_doc
+            UPDATE;     # map string (pair (string %createdBy) (pair (string %name) (timestamp %timestamp))) : pair (pair %lastDoc (string %createdBy) (pair (string %name) (timestamp %timestamp))) (address %owner) : @parameter%register_doc
+            PAIR;       # pair (map string (pair (string %createdBy) (pair (string %name) (timestamp %timestamp)))) (pair (pair %lastDoc (string %createdBy) (pair (string %name) (timestamp %timestamp))) (address %owner)) : @parameter%register_doc
+            SWAP;       # @parameter%register_doc : pair (map string (pair (string %createdBy) (pair (string %name) (timestamp %timestamp)))) (pair (pair %lastDoc (string %createdBy) (pair (string %name) (timestamp %timestamp))) (address %owner))
+          }; # @parameter%register_doc : @storage
+        SWAP;       # @storage : @parameter%register_doc
+        # self.data.hashToDoc[params.hash].timestamp = sp.now # @storage : @parameter%register_doc
+        DUP;        # @storage : @storage : @parameter%register_doc
+        CDR;        # pair (pair %lastDoc (string %createdBy) (pair (string %name) (timestamp %timestamp))) (address %owner) : @storage : @parameter%register_doc
+        SWAP;       # @storage : pair (pair %lastDoc (string %createdBy) (pair (string %name) (timestamp %timestamp))) (address %owner) : @parameter%register_doc
+        CAR;        # map string (pair (string %createdBy) (pair (string %name) (timestamp %timestamp))) : pair (pair %lastDoc (string %createdBy) (pair (string %name) (timestamp %timestamp))) (address %owner) : @parameter%register_doc
+        DUP;        # map string (pair (string %createdBy) (pair (string %name) (timestamp %timestamp))) : map string (pair (string %createdBy) (pair (string %name) (timestamp %timestamp))) : pair (pair %lastDoc (string %createdBy) (pair (string %name) (timestamp %timestamp))) (address %owner) : @parameter%register_doc
+        DIG 3;      # @parameter%register_doc : map string (pair (string %createdBy) (pair (string %name) (timestamp %timestamp))) : map string (pair (string %createdBy) (pair (string %name) (timestamp %timestamp))) : pair (pair %lastDoc (string %createdBy) (pair (string %name) (timestamp %timestamp))) (address %owner)
+        DUP;        # @parameter%register_doc : @parameter%register_doc : map string (pair (string %createdBy) (pair (string %name) (timestamp %timestamp))) : map string (pair (string %createdBy) (pair (string %name) (timestamp %timestamp))) : pair (pair %lastDoc (string %createdBy) (pair (string %name) (timestamp %timestamp))) (address %owner)
+        DUG 4;      # @parameter%register_doc : map string (pair (string %createdBy) (pair (string %name) (timestamp %timestamp))) : map string (pair (string %createdBy) (pair (string %name) (timestamp %timestamp))) : pair (pair %lastDoc (string %createdBy) (pair (string %name) (timestamp %timestamp))) (address %owner) : @parameter%register_doc
+        CDAR;       # string : map string (pair (string %createdBy) (pair (string %name) (timestamp %timestamp))) : map string (pair (string %createdBy) (pair (string %name) (timestamp %timestamp))) : pair (pair %lastDoc (string %createdBy) (pair (string %name) (timestamp %timestamp))) (address %owner) : @parameter%register_doc
+        DUP;        # string : string : map string (pair (string %createdBy) (pair (string %name) (timestamp %timestamp))) : map string (pair (string %createdBy) (pair (string %name) (timestamp %timestamp))) : pair (pair %lastDoc (string %createdBy) (pair (string %name) (timestamp %timestamp))) (address %owner) : @parameter%register_doc
+        DUG 2;      # string : map string (pair (string %createdBy) (pair (string %name) (timestamp %timestamp))) : string : map string (pair (string %createdBy) (pair (string %name) (timestamp %timestamp))) : pair (pair %lastDoc (string %createdBy) (pair (string %name) (timestamp %timestamp))) (address %owner) : @parameter%register_doc
+        GET;        # option (pair (string %createdBy) (pair (string %name) (timestamp %timestamp))) : string : map string (pair (string %createdBy) (pair (string %name) (timestamp %timestamp))) : pair (pair %lastDoc (string %createdBy) (pair (string %name) (timestamp %timestamp))) (address %owner) : @parameter%register_doc
+        IF_SOME
+          {}
+          {
+            PUSH int 17; # int : string : map string (pair (string %createdBy) (pair (string %name) (timestamp %timestamp))) : pair (pair %lastDoc (string %createdBy) (pair (string %name) (timestamp %timestamp))) (address %owner) : @parameter%register_doc
+            FAILWITH;   # FAILED
+          }; # @some : string : map string (pair (string %createdBy) (pair (string %name) (timestamp %timestamp))) : pair (pair %lastDoc (string %createdBy) (pair (string %name) (timestamp %timestamp))) (address %owner) : @parameter%register_doc
+        DUP;        # @some : @some : string : map string (pair (string %createdBy) (pair (string %name) (timestamp %timestamp))) : pair (pair %lastDoc (string %createdBy) (pair (string %name) (timestamp %timestamp))) (address %owner) : @parameter%register_doc
+        CAR;        # string : @some : string : map string (pair (string %createdBy) (pair (string %name) (timestamp %timestamp))) : pair (pair %lastDoc (string %createdBy) (pair (string %name) (timestamp %timestamp))) (address %owner) : @parameter%register_doc
+        SWAP;       # @some : string : string : map string (pair (string %createdBy) (pair (string %name) (timestamp %timestamp))) : pair (pair %lastDoc (string %createdBy) (pair (string %name) (timestamp %timestamp))) (address %owner) : @parameter%register_doc
+        CDAR;       # string : string : string : map string (pair (string %createdBy) (pair (string %name) (timestamp %timestamp))) : pair (pair %lastDoc (string %createdBy) (pair (string %name) (timestamp %timestamp))) (address %owner) : @parameter%register_doc
+        NOW;        # timestamp : string : string : string : map string (pair (string %createdBy) (pair (string %name) (timestamp %timestamp))) : pair (pair %lastDoc (string %createdBy) (pair (string %name) (timestamp %timestamp))) (address %owner) : @parameter%register_doc
+        SWAP;       # string : timestamp : string : string : map string (pair (string %createdBy) (pair (string %name) (timestamp %timestamp))) : pair (pair %lastDoc (string %createdBy) (pair (string %name) (timestamp %timestamp))) (address %owner) : @parameter%register_doc
+        PAIR;       # pair string timestamp : string : string : map string (pair (string %createdBy) (pair (string %name) (timestamp %timestamp))) : pair (pair %lastDoc (string %createdBy) (pair (string %name) (timestamp %timestamp))) (address %owner) : @parameter%register_doc
+        SWAP;       # string : pair string timestamp : string : map string (pair (string %createdBy) (pair (string %name) (timestamp %timestamp))) : pair (pair %lastDoc (string %createdBy) (pair (string %name) (timestamp %timestamp))) (address %owner) : @parameter%register_doc
+        PAIR;       # pair string (pair string timestamp) : string : map string (pair (string %createdBy) (pair (string %name) (timestamp %timestamp))) : pair (pair %lastDoc (string %createdBy) (pair (string %name) (timestamp %timestamp))) (address %owner) : @parameter%register_doc
+        SOME;       # option (pair string (pair string timestamp)) : string : map string (pair (string %createdBy) (pair (string %name) (timestamp %timestamp))) : pair (pair %lastDoc (string %createdBy) (pair (string %name) (timestamp %timestamp))) (address %owner) : @parameter%register_doc
+        SWAP;       # string : option (pair string (pair string timestamp)) : map string (pair (string %createdBy) (pair (string %name) (timestamp %timestamp))) : pair (pair %lastDoc (string %createdBy) (pair (string %name) (timestamp %timestamp))) (address %owner) : @parameter%register_doc
+        UPDATE;     # map string (pair string (pair string timestamp)) : pair (pair %lastDoc (string %createdBy) (pair (string %name) (timestamp %timestamp))) (address %owner) : @parameter%register_doc
+        PAIR;       # pair (map string (pair string (pair string timestamp))) (pair (pair %lastDoc (string %createdBy) (pair (string %name) (timestamp %timestamp))) (address %owner)) : @parameter%register_doc
+        # self.data.hashToDoc[params.hash].name = params.name # pair (map string (pair string (pair string timestamp))) (pair (pair %lastDoc (string %createdBy) (pair (string %name) (timestamp %timestamp))) (address %owner)) : @parameter%register_doc
+        DUP;        # pair (map string (pair string (pair string timestamp))) (pair (pair %lastDoc (string %createdBy) (pair (string %name) (timestamp %timestamp))) (address %owner)) : pair (map string (pair string (pair string timestamp))) (pair (pair %lastDoc (string %createdBy) (pair (string %name) (timestamp %timestamp))) (address %owner)) : @parameter%register_doc
+        CDR;        # pair (pair %lastDoc (string %createdBy) (pair (string %name) (timestamp %timestamp))) (address %owner) : pair (map string (pair string (pair string timestamp))) (pair (pair %lastDoc (string %createdBy) (pair (string %name) (timestamp %timestamp))) (address %owner)) : @parameter%register_doc
+        SWAP;       # pair (map string (pair string (pair string timestamp))) (pair (pair %lastDoc (string %createdBy) (pair (string %name) (timestamp %timestamp))) (address %owner)) : pair (pair %lastDoc (string %createdBy) (pair (string %name) (timestamp %timestamp))) (address %owner) : @parameter%register_doc
+        CAR;        # map string (pair string (pair string timestamp)) : pair (pair %lastDoc (string %createdBy) (pair (string %name) (timestamp %timestamp))) (address %owner) : @parameter%register_doc
+        DUP;        # map string (pair string (pair string timestamp)) : map string (pair string (pair string timestamp)) : pair (pair %lastDoc (string %createdBy) (pair (string %name) (timestamp %timestamp))) (address %owner) : @parameter%register_doc
+        DIG 3;      # @parameter%register_doc : map string (pair string (pair string timestamp)) : map string (pair string (pair string timestamp)) : pair (pair %lastDoc (string %createdBy) (pair (string %name) (timestamp %timestamp))) (address %owner)
+        DUP;        # @parameter%register_doc : @parameter%register_doc : map string (pair string (pair string timestamp)) : map string (pair string (pair string timestamp)) : pair (pair %lastDoc (string %createdBy) (pair (string %name) (timestamp %timestamp))) (address %owner)
+        DUG 4;      # @parameter%register_doc : map string (pair string (pair string timestamp)) : map string (pair string (pair string timestamp)) : pair (pair %lastDoc (string %createdBy) (pair (string %name) (timestamp %timestamp))) (address %owner) : @parameter%register_doc
+        CDAR;       # string : map string (pair string (pair string timestamp)) : map string (pair string (pair string timestamp)) : pair (pair %lastDoc (string %createdBy) (pair (string %name) (timestamp %timestamp))) (address %owner) : @parameter%register_doc
+        DUP;        # string : string : map string (pair string (pair string timestamp)) : map string (pair string (pair string timestamp)) : pair (pair %lastDoc (string %createdBy) (pair (string %name) (timestamp %timestamp))) (address %owner) : @parameter%register_doc
+        DUG 2;      # string : map string (pair string (pair string timestamp)) : string : map string (pair string (pair string timestamp)) : pair (pair %lastDoc (string %createdBy) (pair (string %name) (timestamp %timestamp))) (address %owner) : @parameter%register_doc
+        GET;        # option (pair string (pair string timestamp)) : string : map string (pair string (pair string timestamp)) : pair (pair %lastDoc (string %createdBy) (pair (string %name) (timestamp %timestamp))) (address %owner) : @parameter%register_doc
+        IF_SOME
+          {}
+          {
+            PUSH int 18; # int : string : map string (pair string (pair string timestamp)) : pair (pair %lastDoc (string %createdBy) (pair (string %name) (timestamp %timestamp))) (address %owner) : @parameter%register_doc
+            FAILWITH;   # FAILED
+          }; # @some : string : map string (pair string (pair string timestamp)) : pair (pair %lastDoc (string %createdBy) (pair (string %name) (timestamp %timestamp))) (address %owner) : @parameter%register_doc
+        DUP;        # @some : @some : string : map string (pair string (pair string timestamp)) : pair (pair %lastDoc (string %createdBy) (pair (string %name) (timestamp %timestamp))) (address %owner) : @parameter%register_doc
+        CAR;        # string : @some : string : map string (pair string (pair string timestamp)) : pair (pair %lastDoc (string %createdBy) (pair (string %name) (timestamp %timestamp))) (address %owner) : @parameter%register_doc
+        SWAP;       # @some : string : string : map string (pair string (pair string timestamp)) : pair (pair %lastDoc (string %createdBy) (pair (string %name) (timestamp %timestamp))) (address %owner) : @parameter%register_doc
+        CDDR;       # timestamp : string : string : map string (pair string (pair string timestamp)) : pair (pair %lastDoc (string %createdBy) (pair (string %name) (timestamp %timestamp))) (address %owner) : @parameter%register_doc
+        DIG 5;      # @parameter%register_doc : timestamp : string : string : map string (pair string (pair string timestamp)) : pair (pair %lastDoc (string %createdBy) (pair (string %name) (timestamp %timestamp))) (address %owner)
+        DUP;        # @parameter%register_doc : @parameter%register_doc : timestamp : string : string : map string (pair string (pair string timestamp)) : pair (pair %lastDoc (string %createdBy) (pair (string %name) (timestamp %timestamp))) (address %owner)
+        DUG 6;      # @parameter%register_doc : timestamp : string : string : map string (pair string (pair string timestamp)) : pair (pair %lastDoc (string %createdBy) (pair (string %name) (timestamp %timestamp))) (address %owner) : @parameter%register_doc
+        CDDR;       # string : timestamp : string : string : map string (pair string (pair string timestamp)) : pair (pair %lastDoc (string %createdBy) (pair (string %name) (timestamp %timestamp))) (address %owner) : @parameter%register_doc
+        PAIR;       # pair string timestamp : string : string : map string (pair string (pair string timestamp)) : pair (pair %lastDoc (string %createdBy) (pair (string %name) (timestamp %timestamp))) (address %owner) : @parameter%register_doc
+        SWAP;       # string : pair string timestamp : string : map string (pair string (pair string timestamp)) : pair (pair %lastDoc (string %createdBy) (pair (string %name) (timestamp %timestamp))) (address %owner) : @parameter%register_doc
+        PAIR;       # pair string (pair string timestamp) : string : map string (pair string (pair string timestamp)) : pair (pair %lastDoc (string %createdBy) (pair (string %name) (timestamp %timestamp))) (address %owner) : @parameter%register_doc
+        SOME;       # option (pair string (pair string timestamp)) : string : map string (pair string (pair string timestamp)) : pair (pair %lastDoc (string %createdBy) (pair (string %name) (timestamp %timestamp))) (address %owner) : @parameter%register_doc
+        SWAP;       # string : option (pair string (pair string timestamp)) : map string (pair string (pair string timestamp)) : pair (pair %lastDoc (string %createdBy) (pair (string %name) (timestamp %timestamp))) (address %owner) : @parameter%register_doc
+        UPDATE;     # map string (pair string (pair string timestamp)) : pair (pair %lastDoc (string %createdBy) (pair (string %name) (timestamp %timestamp))) (address %owner) : @parameter%register_doc
+        PAIR;       # pair (map string (pair string (pair string timestamp))) (pair (pair %lastDoc (string %createdBy) (pair (string %name) (timestamp %timestamp))) (address %owner)) : @parameter%register_doc
+        # self.data.hashToDoc[params.hash].createdBy = params.createdBy # pair (map string (pair string (pair string timestamp))) (pair (pair %lastDoc (string %createdBy) (pair (string %name) (timestamp %timestamp))) (address %owner)) : @parameter%register_doc
+        DUP;        # pair (map string (pair string (pair string timestamp))) (pair (pair %lastDoc (string %createdBy) (pair (string %name) (timestamp %timestamp))) (address %owner)) : pair (map string (pair string (pair string timestamp))) (pair (pair %lastDoc (string %createdBy) (pair (string %name) (timestamp %timestamp))) (address %owner)) : @parameter%register_doc
+        CDR;        # pair (pair %lastDoc (string %createdBy) (pair (string %name) (timestamp %timestamp))) (address %owner) : pair (map string (pair string (pair string timestamp))) (pair (pair %lastDoc (string %createdBy) (pair (string %name) (timestamp %timestamp))) (address %owner)) : @parameter%register_doc
+        SWAP;       # pair (map string (pair string (pair string timestamp))) (pair (pair %lastDoc (string %createdBy) (pair (string %name) (timestamp %timestamp))) (address %owner)) : pair (pair %lastDoc (string %createdBy) (pair (string %name) (timestamp %timestamp))) (address %owner) : @parameter%register_doc
+        CAR;        # map string (pair string (pair string timestamp)) : pair (pair %lastDoc (string %createdBy) (pair (string %name) (timestamp %timestamp))) (address %owner) : @parameter%register_doc
+        DUP;        # map string (pair string (pair string timestamp)) : map string (pair string (pair string timestamp)) : pair (pair %lastDoc (string %createdBy) (pair (string %name) (timestamp %timestamp))) (address %owner) : @parameter%register_doc
+        DIG 3;      # @parameter%register_doc : map string (pair string (pair string timestamp)) : map string (pair string (pair string timestamp)) : pair (pair %lastDoc (string %createdBy) (pair (string %name) (timestamp %timestamp))) (address %owner)
+        DUP;        # @parameter%register_doc : @parameter%register_doc : map string (pair string (pair string timestamp)) : map string (pair string (pair string timestamp)) : pair (pair %lastDoc (string %createdBy) (pair (string %name) (timestamp %timestamp))) (address %owner)
+        DUG 4;      # @parameter%register_doc : map string (pair string (pair string timestamp)) : map string (pair string (pair string timestamp)) : pair (pair %lastDoc (string %createdBy) (pair (string %name) (timestamp %timestamp))) (address %owner) : @parameter%register_doc
+        CDAR;       # string : map string (pair string (pair string timestamp)) : map string (pair string (pair string timestamp)) : pair (pair %lastDoc (string %createdBy) (pair (string %name) (timestamp %timestamp))) (address %owner) : @parameter%register_doc
+        DUP;        # string : string : map string (pair string (pair string timestamp)) : map string (pair string (pair string timestamp)) : pair (pair %lastDoc (string %createdBy) (pair (string %name) (timestamp %timestamp))) (address %owner) : @parameter%register_doc
+        DUG 2;      # string : map string (pair string (pair string timestamp)) : string : map string (pair string (pair string timestamp)) : pair (pair %lastDoc (string %createdBy) (pair (string %name) (timestamp %timestamp))) (address %owner) : @parameter%register_doc
+        GET;        # option (pair string (pair string timestamp)) : string : map string (pair string (pair string timestamp)) : pair (pair %lastDoc (string %createdBy) (pair (string %name) (timestamp %timestamp))) (address %owner) : @parameter%register_doc
+        IF_SOME
+          {}
+          {
+            PUSH int 19; # int : string : map string (pair string (pair string timestamp)) : pair (pair %lastDoc (string %createdBy) (pair (string %name) (timestamp %timestamp))) (address %owner) : @parameter%register_doc
+            FAILWITH;   # FAILED
+          }; # @some : string : map string (pair string (pair string timestamp)) : pair (pair %lastDoc (string %createdBy) (pair (string %name) (timestamp %timestamp))) (address %owner) : @parameter%register_doc
+        CDR;        # pair string timestamp : string : map string (pair string (pair string timestamp)) : pair (pair %lastDoc (string %createdBy) (pair (string %name) (timestamp %timestamp))) (address %owner) : @parameter%register_doc
+        DIG 4;      # @parameter%register_doc : pair string timestamp : string : map string (pair string (pair string timestamp)) : pair (pair %lastDoc (string %createdBy) (pair (string %name) (timestamp %timestamp))) (address %owner)
+        CAR;        # string : pair string timestamp : string : map string (pair string (pair string timestamp)) : pair (pair %lastDoc (string %createdBy) (pair (string %name) (timestamp %timestamp))) (address %owner)
+        PAIR;       # pair string (pair string timestamp) : string : map string (pair string (pair string timestamp)) : pair (pair %lastDoc (string %createdBy) (pair (string %name) (timestamp %timestamp))) (address %owner)
+        SOME;       # option (pair string (pair string timestamp)) : string : map string (pair string (pair string timestamp)) : pair (pair %lastDoc (string %createdBy) (pair (string %name) (timestamp %timestamp))) (address %owner)
+        SWAP;       # string : option (pair string (pair string timestamp)) : map string (pair string (pair string timestamp)) : pair (pair %lastDoc (string %createdBy) (pair (string %name) (timestamp %timestamp))) (address %owner)
+        UPDATE;     # map string (pair string (pair string timestamp)) : pair (pair %lastDoc (string %createdBy) (pair (string %name) (timestamp %timestamp))) (address %owner)
+        PAIR;       # pair (map string (pair string (pair string timestamp))) (pair (pair %lastDoc (string %createdBy) (pair (string %name) (timestamp %timestamp))) (address %owner))
+      }
+      {
+        SWAP;       # @storage : @parameter%validate_doc
+        # == validate_doc ==
+        # if self.data.hashToDoc.contains(params.hash): # @storage : @parameter%validate_doc
+        DUP;        # @storage : @storage : @parameter%validate_doc
+        DUG 2;      # @storage : @parameter%validate_doc : @storage
+        CAR;        # map string (pair (string %createdBy) (pair (string %name) (timestamp %timestamp))) : @parameter%validate_doc : @storage
+        SWAP;       # @parameter%validate_doc : map string (pair (string %createdBy) (pair (string %name) (timestamp %timestamp))) : @storage
+        DUP;        # @parameter%validate_doc : @parameter%validate_doc : map string (pair (string %createdBy) (pair (string %name) (timestamp %timestamp))) : @storage
+        DUG 2;      # @parameter%validate_doc : map string (pair (string %createdBy) (pair (string %name) (timestamp %timestamp))) : @parameter%validate_doc : @storage
+        MEM;        # bool : @parameter%validate_doc : @storage
+        IF
+          {
+            SWAP;       # @storage : @parameter%validate_doc
+            # self.data.lastDoc = self.data.hashToDoc[params.hash] # @storage : @parameter%validate_doc
+            DUP;        # @storage : @storage : @parameter%validate_doc
+            DUG 2;      # @storage : @parameter%validate_doc : @storage
+            DUP;        # @storage : @storage : @parameter%validate_doc : @storage
+            CAR;        # map string (pair (string %createdBy) (pair (string %name) (timestamp %timestamp))) : @storage : @parameter%validate_doc : @storage
+            SWAP;       # @storage : map string (pair (string %createdBy) (pair (string %name) (timestamp %timestamp))) : @parameter%validate_doc : @storage
+            CDDR;       # address : map string (pair (string %createdBy) (pair (string %name) (timestamp %timestamp))) : @parameter%validate_doc : @storage
+            DIG 3;      # @storage : address : map string (pair (string %createdBy) (pair (string %name) (timestamp %timestamp))) : @parameter%validate_doc
+            CAR;        # map string (pair (string %createdBy) (pair (string %name) (timestamp %timestamp))) : address : map string (pair (string %createdBy) (pair (string %name) (timestamp %timestamp))) : @parameter%validate_doc
+            DIG 3;      # @parameter%validate_doc : map string (pair (string %createdBy) (pair (string %name) (timestamp %timestamp))) : address : map string (pair (string %createdBy) (pair (string %name) (timestamp %timestamp)))
+            GET;        # option (pair (string %createdBy) (pair (string %name) (timestamp %timestamp))) : address : map string (pair (string %createdBy) (pair (string %name) (timestamp %timestamp)))
+            IF_SOME
+              {
+                # of_some: Get-item:28 # @some : address : map string (pair (string %createdBy) (pair (string %name) (timestamp %timestamp)))
+              }
+              {
+                PUSH int 28; # int : address : map string (pair (string %createdBy) (pair (string %name) (timestamp %timestamp)))
+                FAILWITH;   # FAILED
+              }; # @some : address : map string (pair (string %createdBy) (pair (string %name) (timestamp %timestamp)))
+            PAIR;       # pair @some address : map string (pair (string %createdBy) (pair (string %name) (timestamp %timestamp)))
+            SWAP;       # map string (pair (string %createdBy) (pair (string %name) (timestamp %timestamp))) : pair @some address
+            PAIR;       # pair (map string (pair (string %createdBy) (pair (string %name) (timestamp %timestamp)))) (pair @some address)
+          }
+          {
+            DROP;       # @storage
+            # self.data.lastDoc = sp.record(createdBy = '', name = '', timestamp = sp.timestamp(0)) # @storage
+            DUP;        # @storage : @storage
+            CAR;        # map string (pair (string %createdBy) (pair (string %name) (timestamp %timestamp))) : @storage
+            SWAP;       # @storage : map string (pair (string %createdBy) (pair (string %name) (timestamp %timestamp)))
+            CDDR;       # address : map string (pair (string %createdBy) (pair (string %name) (timestamp %timestamp)))
+            PUSH (pair (string %createdBy) (pair (string %name) (timestamp %timestamp))) (Pair "" (Pair "" "0")); # pair (string %createdBy) (pair (string %name) (timestamp %timestamp)) : address : map string (pair (string %createdBy) (pair (string %name) (timestamp %timestamp)))
+            PAIR;       # pair (pair (string %createdBy) (pair (string %name) (timestamp %timestamp))) address : map string (pair (string %createdBy) (pair (string %name) (timestamp %timestamp)))
+            SWAP;       # map string (pair (string %createdBy) (pair (string %name) (timestamp %timestamp))) : pair (pair (string %createdBy) (pair (string %name) (timestamp %timestamp))) address
+            PAIR;       # pair (map string (pair (string %createdBy) (pair (string %name) (timestamp %timestamp)))) (pair (pair (string %createdBy) (pair (string %name) (timestamp %timestamp))) address)
+          }; # pair (map string (pair (string %createdBy) (pair (string %name) (timestamp %timestamp)))) (pair @some address)
+      }; # pair (map string (pair string (pair string timestamp))) (pair (pair %lastDoc (string %createdBy) (pair (string %name) (timestamp %timestamp))) (address %owner))
+    NIL operation; # list operation : pair (map string (pair string (pair string timestamp))) (pair (pair %lastDoc (string %createdBy) (pair (string %name) (timestamp %timestamp))) (address %owner))
+    PAIR;       # pair (list operation) (pair (map string (pair string (pair string timestamp))) (pair (pair %lastDoc (string %createdBy) (pair (string %name) (timestamp %timestamp))) (address %owner)))
+  };

@@ -1,0 +1,1 @@
+# pytezos==2.5.11 # uncomment for production
