@@ -39,4 +39,31 @@ def get_doc_hash(file_data):
     return file_hash
 
 
+@app.route('/', cors=cors_config)
+def index():
+    return {'hello': 'world'}
 
+
+@app.route('/validate/{doc_name}',
+           cors=cors_config,
+           methods=['POST'],
+           content_types=['application/octet-stream'])
+def validate(doc_name):
+    file_data = _get_request_bytes()
+    doc_hash = get_doc_hash(file_data)
+    return _validate(doc_hash, doc_name)
+
+
+@app.route('/register/{doc_name}',
+           cors=cors_config,
+           methods=['POST'],
+           content_types=['application/octet-stream'])
+def register(doc_name):
+    file_data = _get_request_bytes()
+    doc_hash = get_doc_hash(file_data)
+    file_size = len(app.current_request.raw_body)
+    payload = {'name': doc_name, 'size': file_size,
+               'uploaded': format_time(datetime.datetime.now())}
+    data[doc_hash] = payload
+    print('stored', doc_hash, payload)
+    return payload
