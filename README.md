@@ -20,3 +20,8 @@ Certicrypt is built on a Tezos network. All certificate data is stored on-chain 
 
 # Running locally
 I have mentioned individual steps to run in each of the folders.
+
+# Screenshots
+![image](https://i.imgur.com/AGXbTL5.png)
+![image](https://i.imgur.com/Ibtpl7Q.png)
+![image](https://i.imgur.com/bHgZPxn.png)
